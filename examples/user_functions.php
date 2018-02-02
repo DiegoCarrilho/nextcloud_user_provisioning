@@ -32,21 +32,20 @@ echo "<h2>Adding a user</h2>";
 echo "<p>Existence of user '$newusername' before adding:".$upa->checkIfUserExists($newusername)."</p>";
 $upa->addUser($newusername,"testpassword");
 echo "<p>Existence of user '$newusername' after adding:".$upa->checkIfUserExists($newusername)."</p>";
-$userdata=$upa->getUser($newusername);
-echo "<p>E-Mail of User '$newusername' before editing: '".$userdata['email']."'</p>";
-$upa->editUser($newusername, "email", "testmail@example.org");
-$userdata=$upa->getUser($newusername);
-echo "<p>E-Mail of User '$newusername' after editing: '".$userdata['email']."'</p>";
-print_r($userdata);
 
-echo "<h2>Disabling a user</h2>";
+echo "<h2>Editing a user's data</h2>";
+$userdata=$upa->getUser($newusername);
+echo "<p>E-Mail of User '$newusername' before editing: '".current($userdata['email'])."'</p>";
+$upa->editUser($newusername, "email", "noone@nowhere.com");
+$userdata=$upa->getUser($newusername);
+echo "<p>E-Mail of User '$newusername' after editing: '".current($userdata['email'])."'</p>";
+
+echo "<h2>Disabling/Enabling a user</h2>";
 $userinfo=$upa->getUser($newusername);
 echo "<p>Enable-Status user '$newusername' before disabling:".$userinfo['enabled']."</p>";
 $upa->disableUser($newusername);
 $userinfo=$upa->getUser($newusername);
 echo "<p>Enable-Status user '$newusername' after disabling:".$userinfo['enabled']."</p>";
-
-echo "<h2>Enabling a user</h2>";
 $upa->enableUser($newusername);
 $userinfo=$upa->getUser($newusername);
 echo "<p>Enable-Status user '$newusername' after enabling:".$userinfo['enabled']."</p>";

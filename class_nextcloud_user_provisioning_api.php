@@ -26,7 +26,7 @@ class nextcloud_user_provisioning_api{
 	 * Debug-Level. If set on true you will get lots of debug information from every function
 	 * @var boolean
 	 */
-	var $debug = true;
+	var $debug = false;
 	
 	function __construct() {
 		require_once("nextcloud_user_provisioning_api_config.inc");
@@ -75,10 +75,11 @@ class nextcloud_user_provisioning_api{
 		$output = curl_exec($ch);
 		if($this->debug===true) {
 			echo '<p style="background-color: grey">doCurl:<br />';
-			echo '$url:'.$url.'<br/>$modus'.$modus.'<br/>$postfields:</br>';
+			echo '$url: '.$url.'<br/>$modus: '.$modus.'<br/>$postfields:</br>';
 			print_r($postfields);
 			echo '</br>';
-			echo 'output: '.$output.'</p>';
+			echo 'output: '.$output;
+			echo '</p>';			
 		}
 		curl_close($ch);
 		return $output;
