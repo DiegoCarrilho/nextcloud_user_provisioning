@@ -46,6 +46,11 @@ $upa->disableUser($newusername);
 $userinfo=$upa->getUser($newusername);
 echo "<p>Enable-Status user '$newusername' after disabling:".$userinfo['enabled']."</p>";
 
+echo "<h2>Enabling a user</h2>";
+$upa->enableUser($newusername);
+$userinfo=$upa->getUser($newusername);
+echo "<p>Enable-Status user '$newusername' after enabling:".$userinfo['enabled']."</p>";
+
 
 echo "<h2>Deleting a user</h2>";
 echo "<p>Existence of user '$newusername' before deleting:".$upa->checkIfUserExists($newusername)."</p>";

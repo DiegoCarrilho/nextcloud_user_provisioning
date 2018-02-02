@@ -197,7 +197,6 @@ class nextcloud_user_provisioning_api{
 		if ($this->checkIfUserExists($username)===false) {
 			return false;
 		} else {
-			echo "<p>".$this->base_url.'users/'.$username.'/disable'."#PUT#"."</p>";
 			$erg=$this->doCurl($this->base_url.'users/'.$username.'/disable',"PUT",array());
 			$userinfo=$this->getUser($username);
 			if ($userinfo['enabled']=="false") {
@@ -206,7 +205,26 @@ class nextcloud_user_provisioning_api{
 				return false;	
 			}
 		}
-	}	
+	}
+	
+	/**
+	 * Enables a disabled user, so  that the user can login again
+	 * @param string $username
+	 * @return boolean
+	 */
+	function enableUser($username) {
+		if ($this->checkIfUserExists($username)===false) {
+			return false;
+		} else {
+			$erg=$this->doCurl($this->base_url.'users/'.$username.'/enable',"PUT",array());
+			$userinfo=$this->getUser($username);
+			if ($userinfo['enabled']=="false") {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 	
 	/**
 	 * Deletes a user
