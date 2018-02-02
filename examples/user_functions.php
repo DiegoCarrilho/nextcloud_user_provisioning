@@ -39,6 +39,13 @@ $userdata=$upa->getUser($newusername);
 echo "<p>E-Mail of User '$newusername' after editing: '".$userdata['email']."'</p>";
 print_r($userdata);
 
+echo "<h2>Disabling a user</h2>";
+$userinfo=$upa->getUser($newusername);
+echo "<p>Enable-Status user '$newusername' before disabling:".$userinfo['enabled']."</p>";
+$upa->disableUser($newusername);
+$userinfo=$upa->getUser($newusername);
+echo "<p>Enable-Status user '$newusername' after disabling:".$userinfo['enabled']."</p>";
+
 
 echo "<h2>Deleting a user</h2>";
 echo "<p>Existence of user '$newusername' before deleting:".$upa->checkIfUserExists($newusername)."</p>";

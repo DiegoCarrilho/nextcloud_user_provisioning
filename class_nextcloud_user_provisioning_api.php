@@ -26,7 +26,7 @@ class nextcloud_user_provisioning_api{
 	 * Debug-Level. If set on true you will get lots of debug information from every function
 	 * @var boolean
 	 */
-	var $debug = false;
+	var $debug = true;
 	
 	function __construct() {
 		require_once("nextcloud_user_provisioning_api_config.inc");
@@ -70,8 +70,6 @@ class nextcloud_user_provisioning_api{
 		}
 		if (is_array($postfields) and !empty($postfields)) {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
-// 			echo "<p>Postfields berücksichtigt:</p>";
-// 			print_r($postfields);
 		}
 		curl_setopt($ch, CURLOPT_USERPWD, $this->admin_username.":".$this->admin_password);
 		$output = curl_exec($ch);
@@ -156,7 +154,6 @@ class nextcloud_user_provisioning_api{
 			return true;	
 		} else {
 			$erg=$this->doCurl($this->base_url.'users',"POST",array("userid"=>$username,"password"=>$password));
-			print_r($erg);
 			return $this->checkIfUserExists($username);
 		}		
 	}	
@@ -182,7 +179,6 @@ class nextcloud_user_provisioning_api{
 			return false;
 		} else {
 			$erg=$this->doCurl($this->base_url.'users/'.$username,"PUT",array("key"=>$key,"value"=>$new_value));
-			print_r($erg);
 			$userdata=$this->getUser($username);
 			if ($userdata[$key]==$value) {
 				return true;
@@ -191,6 +187,26 @@ class nextcloud_user_provisioning_api{
 			}			
 		}
 	}
+	
+	/**
+	 * Disables a user, so that he cannot log in anymore
+	 * @param string $username
+	 * @return boolean
+	 */
+	function disableUser($username) {
+		if ($this->checkIfUserExists($username)===false) {
+			return false;
+		} else {
+			echo "<p>".$this->base_url.'users/'.$username.'/disable'."#PUT#"."</p>";
+			$erg=$this->doCurl($this->base_url.'users/'.$username.'/disable',"PUT",array());
+			$userinfo=$this->getUser($username);
+			if ($userinfo['enabled']=="false") {
+				return true;
+			} else {
+				return false;	
+			}
+		}
+	}	
 	
 	/**
 	 * Deletes a user
