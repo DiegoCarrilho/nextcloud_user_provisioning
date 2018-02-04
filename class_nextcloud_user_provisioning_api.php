@@ -252,7 +252,7 @@ class nextcloud_user_provisioning_api{
 			return $out;
 		}
 		foreach ($array_usernames as $nr=>$username) {
-			if ($this->disableUser($username, $password)===true) {
+			if ($this->disableUser($username)===true) {
 				$out['number_successful']++;
 				$out['usernames_successful'][]=$username;
 			} else {
@@ -294,7 +294,7 @@ class nextcloud_user_provisioning_api{
 			return $out;
 		}
 		foreach ($array_usernames as $nr=>$username) {
-			if ($this->enableUser($username, $password)===true) {
+			if ($this->enableUser($username)===true) {
 				$out['number_successful']++;
 				$out['usernames_successful'][]=$username;
 			} else {
