@@ -170,6 +170,11 @@ class nextcloud_user_provisioning_api{
 		return $this->checkIfUserExists($username);		
 	}	
 	
+	/**
+	 * Adding a list of new users 
+	 * @param unknown $array_username_password An Array with the designates username as key and the designates password as value
+	 * @return array "number_successful" (int) "number_error" (int) "usernames_successful" (array) and "usernames_error" (array)
+	 */
 	function addMultipleUsers($array_username_password) {
 		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
 		if (!is_array($array_username_password)) {
