@@ -224,6 +224,33 @@ class nextcloud_user_provisioning_api{
 	}
 	
 	/**
+	 * Edit a list of users and their data
+	 * @param unknown $array_usernames_and_key_and_value An Array with Subarrays containing the username as key and the group are value
+	 * Example: array(array("user1"=>"group1"),array("user2"=>"group2"))
+	 * @return array "number_successful" (int) "number_error" (int) "usernames_successful" (array with Subarrays containing the username as key and the group are value) and "usernames_error" (array with Subarrays containing the username as key and the group are value)
+	 */
+	function editMultipleUsersData($array_usernames_and_key_and_value){
+		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
+		if (!is_array($array_usernames_and_key_and_value)) {
+			return $out;
+		}
+		foreach ($array_usernames_and_key_and_value as $nr=>$array) {
+			foreach ($array as $username=>$subarray) {
+				$key=key($subarray);
+				$value=current($subarray);
+				if ($this->editUser($username, $key, $value)===true) {
+					$out['number_successful']++;
+					$out['usernames_successful'][]=$subarray;
+				} else {
+					$out['number_error']++;
+					$out['usernames_error'][]=$subarray;
+				}
+			}
+		}
+		return $out;
+	}
+	
+	/**
 	 * Disables a user, so that he cannot log in anymore
 	 * @param string $username
 	 * @return boolean

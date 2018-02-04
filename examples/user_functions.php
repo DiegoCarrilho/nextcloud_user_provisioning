@@ -45,6 +45,11 @@ $upa->editUser($newusername, "email", "noone@nowhere.com");
 $userinfo=$upa->getUser($newusername);
 echo "<p>E-Mail of User '$newusername' after editing: '".$userinfo['email']."'</p>";
 
+echo "<h2>Editing multiple user's data</h2>";
+$newusers_and_data_changes=array(array("newuser1"=>array("displayname"=>"New User 1")),array("nonexistentuser"=>array("displayname"=>"Nonexistent User")));
+$erg=$upa->editMultipleUsersData($newusers_and_data_changes);
+print_r($erg);
+
 echo "<h2>Disabling/Enabling a user</h2>";
 $userinfo=$upa->getUser($newusername);
 echo "<p>Enable-Status user '$newusername' before disabling:".$userinfo['enabled']."</p>";
