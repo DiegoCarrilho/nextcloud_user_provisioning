@@ -242,6 +242,28 @@ class nextcloud_user_provisioning_api{
 	}
 	
 	/**
+	 * Disabling a list of users
+	 * @param unknown $array_usernames An Array with the usernames to be disabled
+	 * @return array "number_successful" (int) "number_error" (int) "usernames_successful" (array) and "usernames_error" (array)
+	 */
+	function disableMultipleUsers($array_usernames) {
+		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
+		if (!is_array($array_usernames)) {
+			return $out;
+		}
+		foreach ($array_usernames as $nr=>$username) {
+			if ($this->disableUser($username, $password)===true) {
+				$out['number_successful']++;
+				$out['usernames_successful'][]=$username;
+			} else {
+				$out['number_error']++;
+				$out['usernames_error'][]=$username;
+			}
+		}
+		return $out;
+	}
+	
+	/**
 	 * Enables a disabled user, so  that the user can login again
 	 * @param string $username
 	 * @return boolean
@@ -262,6 +284,28 @@ class nextcloud_user_provisioning_api{
 	}
 	
 	/**
+	 * Enabling a list of users
+	 * @param unknown $array_usernames An Array with the usernames to be enabled
+	 * @return array "number_successful" (int) "number_error" (int) "usernames_successful" (array) and "usernames_error" (array)
+	 */
+	function enableMultipleUsers($array_usernames) {
+		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
+		if (!is_array($array_usernames)) {
+			return $out;
+		}
+		foreach ($array_usernames as $nr=>$username) {
+			if ($this->enableUser($username, $password)===true) {
+				$out['number_successful']++;
+				$out['usernames_successful'][]=$username;
+			} else {
+				$out['number_error']++;
+				$out['usernames_error'][]=$username;
+			}
+		}
+		return $out;
+	}
+	
+	/**
 	 * Deletes a user
 	 * @param string $username
 	 * @return boolean
@@ -279,6 +323,29 @@ class nextcloud_user_provisioning_api{
 			}
 		}
 	}
+	
+	/**
+	 * Killing a list of users
+	 * @param unknown $array_usernames An Array with the usernames to kill
+	 * @return array "number_successful" (int) "number_error" (int) "usernames_successful" (array) and "usernames_error" (array)
+	 */
+	function killMultipleUsers($array_usernames) {
+		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
+		if (!is_array($array_usernames)) {
+			return $out;
+		}
+		foreach ($array_usernames as $nr=>$username) {
+			if ($this->killUser($username)===true) {
+				$out['number_successful']++;
+				$out['usernames_successful'][]=$username;
+			} else {
+				$out['number_error']++;
+				$out['usernames_error'][]=$username;
+			}
+		}
+		return $out;
+	}
+	
 	
 	/**
 	 * Gets all groups of the Nextcloud instance

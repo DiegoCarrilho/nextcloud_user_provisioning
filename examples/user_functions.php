@@ -55,9 +55,24 @@ $upa->enableUser($newusername);
 $userinfo=$upa->getUser($newusername);
 echo "<p>Enable-Status user '$newusername' after enabling:".$userinfo['enabled']."</p>";
 
+echo "<h2>Disabling multiple users</h2>";
+$newusers=array("newuser1","newuser2","nonexistentuser");
+$erg=$upa->disableMultipleUsers($newusers);
+print_r($erg);
+
+echo "<h2>Enabling multiple users</h2>";
+$newusers=array("newuser1","newuser2","nonexistentuser");
+$erg=$upa->enableMultipleUsers($newusers);
+print_r($erg);
 
 echo "<h2>Deleting a user</h2>";
 echo "<p>Existence of user '$newusername' before deleting:".$upa->checkIfUserExists($newusername)."</p>";
 $upa->killUser($newusername);
 echo "<p>Existence of user '$newusername' after deleting:".$upa->checkIfUserExists($newusername)."</p>";
+
+echo "<h2>Deleting multiple users</h2>";
+$newusers=array("newuser1","newuser2","nonexistentuser");
+$erg=$upa->killMultipleUsers($newusers);
+print_r($erg);
+
 ?>
