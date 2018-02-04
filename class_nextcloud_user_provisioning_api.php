@@ -26,13 +26,16 @@ class nextcloud_user_provisioning_api{
 	 * Debug-Level. If set on true you will get lots of debug information from every function
 	 * @var boolean
 	 */
-	var $debug = true;
+	var $debug = false;
 	
 	function __construct() {
 		require_once("nextcloud_user_provisioning_api_config.inc");
 		$this->admin_username=$admin_username;
 		$this->admin_password = $admin_password;
 		$this->base_url = $base_url.'/ocs/v1.php/cloud/';
+		if (isset($debug)) {
+			$this->debug=$debug;
+		}
 		if($this->debug===true) {
 			echo '<p style="background-color: grey">__construct:<br />
 			$this->admin_username='.$admin_username.'<br />

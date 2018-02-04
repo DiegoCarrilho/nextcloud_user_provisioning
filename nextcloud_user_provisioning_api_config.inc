@@ -24,4 +24,10 @@ $admin_password = '';
  * @var string
  */
 $base_url = '';
+
+/**
+ * Debug-Level. If set on true you will get lots of debug information from every function. Can be true or false (default)
+ * @var boolean
+ */
+$debug = false;
 ?>
