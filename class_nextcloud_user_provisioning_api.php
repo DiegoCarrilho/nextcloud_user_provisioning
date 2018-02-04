@@ -481,6 +481,31 @@ class nextcloud_user_provisioning_api{
 	}
 	
 	/**
+	 * Adding a list of users to groups
+	 * @param unknown $array_usernames_and_groupnames An Array with Subarrays containing the username as key and the group are value
+	 * Example: array(array("user1"=>"group1"),array("user2"=>"group2"))
+	 * @return array "number_successful" (int) "number_error" (int) "usernames_successful" (array with Subarrays containing the username as key and the group are value) and "usernames_error" (array with Subarrays containing the username as key and the group are value)
+	 */
+	function addMultipleUsersToGroups($array_usernames_and_groupnames){
+		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
+		if (!is_array($array_usernames_and_groupnames)) {
+			return $out;
+		}
+		foreach ($array_usernames_and_groupnames as $subarray) {
+			$username=key($subarray);
+			$groupname=current($subarray);
+			if ($this->addUserToGroup($username,$groupname)===true) {
+				$out['number_successful']++;
+				$out['usernames_successful'][]=$subarray;
+			} else {
+				$out['number_error']++;
+				$out['usernames_error'][]=$subarray;
+			}
+		}
+		return $out;
+	}
+	
+	/**
 	 * Converts XML-Code into an array
 	 * Code from http://bookofzeus.com/articles/php/convert-simplexml-object-into-php-array/
 	 * @param string $xml

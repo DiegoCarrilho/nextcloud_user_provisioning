@@ -1,6 +1,7 @@
 <?php
 require_once("../class_nextcloud_user_provisioning_api.php");
 $upa = new nextcloud_user_provisioning_api();
+$GLOBALS['upa']=$upa;
 
 echo '<h1>Examples Group Functions</h1>';
 
@@ -25,8 +26,27 @@ foreach ($members as $m) {
 }
 echo "</ol>";
 
-$newgroupname='neuetestgruppe123';
-$newgroupmember='Daniel';
+$newgroupname=generateNewGroupName('newtestgroup123');
+function generateNewGroupName($newgroupname) {
+	if ($GLOBALS['upa']->checkIfUserExists($newgroupname)===true) {
+		$newgroupname.=random_int(0,9);
+		return generateNewgroupname($newgroupname);
+	} else {
+		return $newgroupname;
+	}
+}
+
+$newgroupmember=generateNewGroupMember('newtestuser123');
+
+function generateNewGroupMember($newgroupmember) {
+	if ($GLOBALS['upa']->checkIfUserExists($newgroupmember)===true) {
+		$newgroupmember.=random_int(0,9);
+		return generateNewGroupMember($newgroupmember);
+	} else {
+		return $newgroupmember;
+	}
+}
+
 echo "<h3>Adding a group</h3>";
 $ext=$upa->checkIfGroupExists($newgroupname);
 echo "<hp>Existence of '$newgroupname' before adding: ".$ext."</hp>";
@@ -42,6 +62,16 @@ if ($ext===false) {
 	$ext=$upa->checkIfUserIsMemberOfGroup($newgroupmember, $newgroupname);
 	echo "<p>Is user '$newgroupmember' a member of group '$newgroupname' after adding? ".$ext."</p>";
 }
+
+echo "<h2>Adding multiple users to groups</h2>";
+$newtestuser1=generateNewGroupMember("newtestuser_1_");
+$newtestuser2=generateNewGroupMember("newtestuser_2_");
+$upa->addMultipleUsers(array($newtestuser1=>"testpassword",$newtestuser2=>"testpassword"));
+$newusers_and_groups=array(array($newtestuser1=>$newgroupname),array($newtestuser2=>"nonexistentgroup"));
+$erg=$upa->addMultipleUsersToGroups($newusers_and_groups);
+print_r($erg);
+$upa->killMultipleUsers(array($newtestuser1,$newtestuser2));
+
 echo "<h3>Deleting a group</h3>";
 echo "<p>Group '$newgroupname' is being deleted</p>";
 $upa->killGroup($newgroupname);
