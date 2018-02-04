@@ -170,6 +170,23 @@ class nextcloud_user_provisioning_api{
 		return $this->checkIfUserExists($username);		
 	}	
 	
+	function addMultipleUsers($array_username_password) {
+		$out=array("number_successful"=>0,"number_error"=>0,"usernames_successful"=>array(),"usernames_error"=>array());
+		if (!is_array($array_username_password)) {
+			return $out;
+		}
+		foreach ($array_username_password as $username=>$password) {
+			if ($this->addUser($username, $password)===true) {
+				$out['number_successful']++;
+				$out['usernames_successful'][]=$username;
+			} else {
+				$out['number_error']++;
+				$out['usernames_error'][]=$username;
+			}
+		}
+		return $out;
+	}
+	
 	/**
 	 * Edit data of an existing user
 	 * @param string $username

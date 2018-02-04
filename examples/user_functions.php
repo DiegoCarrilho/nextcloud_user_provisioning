@@ -33,6 +33,11 @@ echo "<p>Existence of user '$newusername' before adding:".$upa->checkIfUserExist
 $upa->addUser($newusername,"testpassword");
 echo "<p>Existence of user '$newusername' after adding:".$upa->checkIfUserExists($newusername)."</p>";
 
+echo "<h2>Adding multiple users</h2>";
+$newusers=array("newuser1"=>"newuuser1spassword","newuser2"=>"newuuser2spassword","newuser1"=>"newuuser1spassword");
+$erg=$upa->addMultipleUsers($newusers);
+print_r($erg);
+
 echo "<h2>Editing a user's data</h2>";
 $userdata=$upa->getUser($newusername);
 echo "<p>E-Mail of User '$newusername' before editing: '".current($userdata['email'])."'</p>";
