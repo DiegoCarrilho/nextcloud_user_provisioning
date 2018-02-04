@@ -90,12 +90,16 @@ class nextcloud_user_provisioning_api{
 	 * @return array
 	 */
 	function getAllUsers() {
-		$erg_xml=$this->doCurl($this->base_url.'users?search=',"GET",array());
-		$out = $this->xml2array($erg_xml);		
-		if (count($out['data']['users']['element'])==1) {
-			return array($out['data']['users']['element']);
+		$erg=$this->doCurl($this->base_url.'users?search=',"GET",array());
+		if ($erg['meta']['statuscode']=="100") {
+			$out = $this->xml2array($erg);		
+			if (count($out['data']['users']['element'])==1) {
+				return array($out['data']['users']['element']);
+			} else {
+				return $out['data']['users']['element'];
+			}
 		} else {
-			return $out['data']['users']['element'];
+			return array();
 		}
 	}
 	
@@ -106,9 +110,13 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getUser($username) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username,"GET",array());
-		$out = $this->xml2array($erg);
-		if (isset($out['data'])) {
-			return $out['data'];
+		if ($erg['meta']['statuscode']=="100") {
+			$out = $this->xml2array($erg);
+			if (isset($out['data'])) {
+				return $out['data'];
+			} else {
+				return array();
+			}
 		} else {
 			return array();
 		}
@@ -122,11 +130,15 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getUserGroups($username) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username.'/groups',"GET",array());
-		$out = $this->xml2array($erg);
-		if (count($out['data']['groups']['element'])==1) {
-			return array($out['data']['groups']['element']);
+		if ($erg['meta']['statuscode']=="100") {
+			$out = $this->xml2array($erg);
+			if (count($out['data']['groups']['element'])==1) {
+				return array($out['data']['groups']['element']);
+			} else {
+				return $out['data']['groups']['element'];
+			}
 		} else {
-			return $out['data']['groups']['element'];
+			return array();
 		}
 	}	
 
@@ -151,12 +163,8 @@ class nextcloud_user_provisioning_api{
 	 * @return mixed
 	 */
 	function addUser($username, $password) {
-		if ($this->checkIfUserExists($username)===true) {
-			return true;	
-		} else {
-			$erg=$this->doCurl($this->base_url.'users',"POST",array("userid"=>$username,"password"=>$password));
-			return $this->checkIfUserExists($username);
-		}		
+		$erg=$this->doCurl($this->base_url.'users',"POST",array("userid"=>$username,"password"=>$password));
+		return $this->checkIfUserExists($username);		
 	}	
 	
 	/**
@@ -176,10 +184,8 @@ class nextcloud_user_provisioning_api{
 	 * @return boolean
 	 */
 	function editUser($username, $key, $new_value) {
-		if ($this->checkIfUserExists($username)===false) {
-			return false;
-		} else {
-			$erg=$this->doCurl($this->base_url.'users/'.$username,"PUT",array("key"=>$key,"value"=>$new_value));
+		$erg=$this->doCurl($this->base_url.'users/'.$username,"PUT",array("key"=>$key,"value"=>$new_value));
+		if ($erg['meta']['statuscode']=="100") {
 			$userdata=$this->getUser($username);
 			if ($userdata[$key]==$value) {
 				return true;
@@ -195,16 +201,16 @@ class nextcloud_user_provisioning_api{
 	 * @return boolean
 	 */
 	function disableUser($username) {
-		if ($this->checkIfUserExists($username)===false) {
-			return false;
-		} else {
-			$erg=$this->doCurl($this->base_url.'users/'.$username.'/disable',"PUT",array());
+		$erg=$this->doCurl($this->base_url.'users/'.$username.'/disable',"PUT",array());
+		if ($erg['meta']['statuscode']=="100") {
 			$userinfo=$this->getUser($username);
 			if ($userinfo['enabled']=="false") {
 				return true;
 			} else {
 				return false;	
 			}
+		} else {
+			return false;
 		}
 	}
 	
@@ -214,16 +220,16 @@ class nextcloud_user_provisioning_api{
 	 * @return boolean
 	 */
 	function enableUser($username) {
-		if ($this->checkIfUserExists($username)===false) {
-			return false;
-		} else {
-			$erg=$this->doCurl($this->base_url.'users/'.$username.'/enable',"PUT",array());
+		$erg=$this->doCurl($this->base_url.'users/'.$username.'/enable',"PUT",array());
+		if ($erg['meta']['statuscode']=="100") {
 			$userinfo=$this->getUser($username);
 			if ($userinfo['enabled']=="false") {
 				return true;
 			} else {
 				return false;
 			}
+		} else {
+			return false;
 		}
 	}
 	
@@ -251,12 +257,16 @@ class nextcloud_user_provisioning_api{
 	 * @return array
 	 */
 	function getAllGroups() {
-		$erg_xml=$this->doCurl($this->base_url.'groups?search=',"GET",array());
-		$out = $this->xml2array($erg_xml);
-		if (count($out['data']['groups']['element'])==1) {
-			return array($out['data']['groups']['element']);
+		$erg=$this->doCurl($this->base_url.'groups?search=',"GET",array());
+		if ($erg['meta']['statuscode']=="100") {
+			$out = $this->xml2array($erg);
+			if (count($out['data']['groups']['element'])==1) {
+				return array($out['data']['groups']['element']);
+			} else {
+				return $out['data']['groups']['element'];
+			}
 		} else {
-			return $out['data']['groups']['element'];
+			return array();
 		}
 	}
 	
@@ -267,15 +277,19 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getGroup($groupname) {
 		$erg=$this->doCurl($this->base_url.'groups?search='.$groupname,"GET",array());
-		$out = $this->xml2array($erg);
-		if (count($out['data']['groups']['element'])==1) {
-			return array($out['data']['groups']['element']);
-		} else {
-			if (count($out['data']['groups']['element'])>1) {
-				return $out['data']['groups']['element'];
+		if ($erg['meta']['statuscode']=="100") {
+			$out = $this->xml2array($erg);
+			if (count($out['data']['groups']['element'])==1) {
+				return array($out['data']['groups']['element']);
 			} else {
-				return array();
+				if (count($out['data']['groups']['element'])>1) {
+					return $out['data']['groups']['element'];
+				} else {
+					return array();
+				}
 			}
+		} else {
+			return array();
 		}
 	}
 	
@@ -300,15 +314,19 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getGroupMembers($groupname) {
 		$erg=$this->doCurl($this->base_url.'groups/'.$groupname,"GET",array());
-		$out = $this->xml2array($erg);
-		if (count($out['data']['users']['element'])==1) {			
-			return array($out['data']['users']['element']);
-		} else {
-			if (count($out['data']['users']['element'])>1) {
-				return $out['data']['users']['element'];
+		if ($erg['meta']['statuscode']=="100") {
+			$out = $this->xml2array($erg);
+			if (count($out['data']['users']['element'])==1) {			
+				return array($out['data']['users']['element']);
 			} else {
-				return array();
-			}				
+				if (count($out['data']['users']['element'])>1) {
+					return $out['data']['users']['element'];
+				} else {
+					return array();
+				}				
+			}
+		} else {
+			return array();
 		}
 	}
 	
@@ -318,12 +336,8 @@ class nextcloud_user_provisioning_api{
 	 * @return boolean
 	 */
 	function addGroup($groupname) {
-		if ($this->checkIfGroupExists($groupname)===true) {
-			return true;
-		} else {
-			$erg=$this->doCurl($this->base_url.'groups',"POST", array("groupid"=>$groupname));
-			return $this->checkIfGroupExists($groupname);
-		}
+		$erg=$this->doCurl($this->base_url.'groups',"POST", array("groupid"=>$groupname));			
+		return $this->checkIfGroupExists($groupname);		
 	}
 	
 	/**
@@ -332,16 +346,12 @@ class nextcloud_user_provisioning_api{
 	 * @return boolean
 	 */
 	function killGroup($groupname) {
-		if ($this->checkIfGroupExists($groupname)===false) {
+		$erg=$this->doCurl($this->base_url.'groups/'.$groupname,"DELETE",array());
+		$ext=$this->checkIfGroupExists($groupname);
+		if ($ext===false) {
 			return true;
 		} else {
-			$erg=$this->doCurl($this->base_url.'groups/'.$groupname,"DELETE",array());
-			$ext=$this->checkIfGroupExists($groupname);
-			if ($ext===false) {
-				return true;
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
 	
@@ -367,22 +377,11 @@ class nextcloud_user_provisioning_api{
 	 * @return boolean
 	 */
 	function addUserToGroup($username, $groupname) {
+		$erg=$this->doCurl($this->base_url.'users/'.$username.'/groups',"POST",array("groupid"=>$groupname));
 		if ($this->checkIfUserIsMemberOfGroup($username, $groupname)===true) {
 			return true;
-		}
-		if ($this->checkIfGroupExists($groupname)===false) {
-			return false;
 		} else {
-			if ($this->checkIfUserExists($username)===false) {
-				return false;
-			} else {
-				$erg=$this->doCurl($this->base_url.'users/'.$username.'/groups',"POST",array("groupid"=>$groupname));
-				if ($this->checkIfUserIsMemberOfGroup($username, $groupname)===true) {
-					return true;
-				} else {
-					return false;
-				}
-			}
+			return false;
 		}
 	}
 	
