@@ -273,7 +273,7 @@ class nextcloud_user_provisioning_api{
 		$out = $this->xml2array($erg);
 		if ($out['meta']['statuscode']=="100") {
 			$userinfo=$this->getUser($username);
-			if ($userinfo['enabled']=="false") {
+			if ($userinfo['enabled']=="true") {
 				return true;
 			} else {
 				return false;
