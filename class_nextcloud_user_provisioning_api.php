@@ -56,7 +56,8 @@ class nextcloud_user_provisioning_api{
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'OCS-APIRequest:true'
+				'OCS-APIRequest:true',
+				'Content-Type: application/x-www-form-urlencoded'
 		));
 		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		if ($modus=="" or $modus=="GET") {
@@ -72,7 +73,8 @@ class nextcloud_user_provisioning_api{
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 		}
 		if (is_array($postfields) and !empty($postfields)) {
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
+			$postfields=http_build_query($postfields);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);			
 		}
 		curl_setopt($ch, CURLOPT_USERPWD, $this->admin_username.":".$this->admin_password);
 		$output = curl_exec($ch);
@@ -205,11 +207,11 @@ class nextcloud_user_provisioning_api{
 	 * website
 	 * twitter
 	 * password
-	 * @param string $new_value The new value for this key
+	 * @param string $value The new value for this key
 	 * @return boolean
 	 */
-	function editUser($username, $key, $new_value) {
-		$erg=$this->doCurl($this->base_url.'users/'.$username,"PUT",array("key"=>$key,"value"=>$new_value));
+	function editUser($username, $key, $value) {
+		$erg=$this->doCurl($this->base_url.'users/'.$username,"PUT",array("key"=>$key,"value"=>$value));
 		$out = $this->xml2array($erg);
 		if ($out['meta']['statuscode']=="100") {
 			$userdata=$this->getUser($username);

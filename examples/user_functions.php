@@ -39,11 +39,11 @@ $erg=$upa->addMultipleUsers($newusers);
 print_r($erg);
 
 echo "<h2>Editing a user's data</h2>";
-$userdata=$upa->getUser($newusername);
-echo "<p>E-Mail of User '$newusername' before editing: '".current($userdata['email'])."'</p>";
+$userinfo=$upa->getUser($newusername);
+echo "<p>E-Mail of User '$newusername' before editing: '".$userinfo['email']."'</p>";
 $upa->editUser($newusername, "email", "noone@nowhere.com");
-$userdata=$upa->getUser($newusername);
-echo "<p>E-Mail of User '$newusername' after editing: '".current($userdata['email'])."'</p>";
+$userinfo=$upa->getUser($newusername);
+echo "<p>E-Mail of User '$newusername' after editing: '".$userinfo['email']."'</p>";
 
 echo "<h2>Disabling/Enabling a user</h2>";
 $userinfo=$upa->getUser($newusername);
