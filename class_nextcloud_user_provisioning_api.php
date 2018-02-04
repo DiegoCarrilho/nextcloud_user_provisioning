@@ -26,7 +26,7 @@ class nextcloud_user_provisioning_api{
 	 * Debug-Level. If set on true you will get lots of debug information from every function
 	 * @var boolean
 	 */
-	var $debug = false;
+	var $debug = true;
 	
 	function __construct() {
 		require_once("nextcloud_user_provisioning_api_config.inc");
@@ -91,8 +91,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getAllUsers() {
 		$erg=$this->doCurl($this->base_url.'users?search=',"GET",array());
-		if ($erg['meta']['statuscode']=="100") {
-			$out = $this->xml2array($erg);		
+		$out = $this->xml2array($erg);	
+		if ($out['meta']['statuscode']=="100") {				
 			if (count($out['data']['users']['element'])==1) {
 				return array($out['data']['users']['element']);
 			} else {
@@ -110,8 +110,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getUser($username) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username,"GET",array());
-		if ($erg['meta']['statuscode']=="100") {
-			$out = $this->xml2array($erg);
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {			
 			if (isset($out['data'])) {
 				return $out['data'];
 			} else {
@@ -130,8 +130,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getUserGroups($username) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username.'/groups',"GET",array());
-		if ($erg['meta']['statuscode']=="100") {
-			$out = $this->xml2array($erg);
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {			
 			if (count($out['data']['groups']['element'])==1) {
 				return array($out['data']['groups']['element']);
 			} else {
@@ -185,7 +185,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function editUser($username, $key, $new_value) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username,"PUT",array("key"=>$key,"value"=>$new_value));
-		if ($erg['meta']['statuscode']=="100") {
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {
 			$userdata=$this->getUser($username);
 			if ($userdata[$key]==$value) {
 				return true;
@@ -202,7 +203,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function disableUser($username) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username.'/disable',"PUT",array());
-		if ($erg['meta']['statuscode']=="100") {
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {
 			$userinfo=$this->getUser($username);
 			if ($userinfo['enabled']=="false") {
 				return true;
@@ -221,7 +223,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function enableUser($username) {
 		$erg=$this->doCurl($this->base_url.'users/'.$username.'/enable',"PUT",array());
-		if ($erg['meta']['statuscode']=="100") {
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {
 			$userinfo=$this->getUser($username);
 			if ($userinfo['enabled']=="false") {
 				return true;
@@ -258,8 +261,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getAllGroups() {
 		$erg=$this->doCurl($this->base_url.'groups?search=',"GET",array());
-		if ($erg['meta']['statuscode']=="100") {
-			$out = $this->xml2array($erg);
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {			
 			if (count($out['data']['groups']['element'])==1) {
 				return array($out['data']['groups']['element']);
 			} else {
@@ -277,8 +280,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getGroup($groupname) {
 		$erg=$this->doCurl($this->base_url.'groups?search='.$groupname,"GET",array());
-		if ($erg['meta']['statuscode']=="100") {
-			$out = $this->xml2array($erg);
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {			
 			if (count($out['data']['groups']['element'])==1) {
 				return array($out['data']['groups']['element']);
 			} else {
@@ -314,8 +317,8 @@ class nextcloud_user_provisioning_api{
 	 */
 	function getGroupMembers($groupname) {
 		$erg=$this->doCurl($this->base_url.'groups/'.$groupname,"GET",array());
-		if ($erg['meta']['statuscode']=="100") {
-			$out = $this->xml2array($erg);
+		$out = $this->xml2array($erg);
+		if ($out['meta']['statuscode']=="100") {			
 			if (count($out['data']['users']['element'])==1) {			
 				return array($out['data']['users']['element']);
 			} else {
