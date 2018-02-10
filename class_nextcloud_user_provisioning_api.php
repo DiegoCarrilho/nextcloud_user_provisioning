@@ -28,8 +28,12 @@ class nextcloud_user_provisioning_api{
 	 */
 	var $debug = false;
 	
-	function __construct() {
-		require_once("nextcloud_user_provisioning_api_config.inc");
+	/**
+	 * Constructor for the class
+	 * @param string $config_file Optional you can name the full path of a config file. Default: "nextcloud_user_provisioning_api_config.inc" 
+	 */
+	function __construct($config_file="nextcloud_user_provisioning_api_config.inc") {
+		require_once($config_file);
 		$this->admin_username=$admin_username;
 		$this->admin_password = $admin_password;
 		$this->base_url = $base_url.'/ocs/v1.php/cloud/';
